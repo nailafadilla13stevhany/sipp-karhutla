@@ -1,0 +1,72 @@
+import csv
+import random
+from pathlib import Path
+
+FEATURES = [
+    'Hotspot_Density_7D',
+    'Consecutive_Dry_Days',
+    'Historical_Fire_Frequency',
+    'Patrol_Coverage_Gap',
+    'NDVI_Dryness_Index',
+    'Mean_Temp_Humidity_Ratio',
+    'Wind_Speed_Mean_3D',
+]
+
+random.seed(42)
+root = Path(__file__).resolve().parent
+# WARNING: This is entirely synthetic demonstration data, not real fire observations.
+rows = []
+locations = ['Sebangau', 'Sungai Apit', 'Kuala Kapuas', 'Muara Teweh', 'Pulang Pisau', 'Kotawaringin']
+latitudes = [-2.32, 0.76, -2.98, -0.95, -2.68, -2.52]
+longitudes = [113.90, 102.15, 114.38, 114.89, 114.02, 112.14]
+
+for i in range(600):
+    risk = random.choices(['Low', 'Medium', 'High'], weights=[42, 35, 23])[0]
+    if risk == 'Low':
+        hotspot = random.uniform(0.05, 0.40)
+        dry = random.randint(1, 18)
+        history = random.uniform(0.05, 0.35)
+        gap = random.uniform(0.10, 0.50)
+        ndvi = random.uniform(0.10, 0.45)
+        ratio = random.uniform(0.20, 0.55)
+        wind = random.uniform(3.0, 10.0)
+    elif risk == 'Medium':
+        hotspot = random.uniform(0.35, 0.70)
+        dry = random.randint(10, 32)
+        history = random.uniform(0.30, 0.65)
+        gap = random.uniform(0.35, 0.75)
+        ndvi = random.uniform(0.40, 0.70)
+        ratio = random.uniform(0.45, 0.75)
+        wind = random.uniform(6.0, 15.0)
+    else:
+        hotspot = random.uniform(0.65, 1.00)
+        dry = random.randint(25, 60)
+        history = random.uniform(0.60, 1.00)
+        gap = random.uniform(0.55, 1.00)
+        ndvi = random.uniform(0.65, 1.00)
+        ratio = random.uniform(0.65, 1.00)
+        wind = random.uniform(10.0, 22.0)
+
+    index = i % len(locations)
+    rows.append({
+        'location_name': locations[index],
+        'latitude': round(latitudes[index] + random.uniform(-0.20, 0.20), 6),
+        'longitude': round(longitudes[index] + random.uniform(-0.20, 0.20), 6),
+        'Hotspot_Density_7D': round(hotspot, 3),
+        'Consecutive_Dry_Days': dry,
+        'Historical_Fire_Frequency': round(history, 3),
+        'Patrol_Coverage_Gap': round(gap, 3),
+        'NDVI_Dryness_Index': round(ndvi, 3),
+        'Mean_Temp_Humidity_Ratio': round(ratio, 3),
+        'Wind_Speed_Mean_3D': round(wind, 3),
+        'risk_level': risk,
+    })
+
+with (root / 'dummy_data.csv').open('w', newline='', encoding='utf-8') as file:
+    writer = csv.DictWriter(file, fieldnames=[
+        'location_name', 'latitude', 'longitude', 'Hotspot_Density_7D',
+        'Consecutive_Dry_Days', 'Historical_Fire_Frequency', 'Patrol_Coverage_Gap',
+        'NDVI_Dryness_Index', 'Mean_Temp_Humidity_Ratio', 'Wind_Speed_Mean_3D', 'risk_level'
+    ])
+    writer.writeheader()
+    writer.writerows(rows)
