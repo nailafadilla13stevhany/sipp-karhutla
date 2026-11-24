@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SIPP Karhutla</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <aside class="sidebar">
+    <div class="brand"><span class="brand-mark">S</span><div><strong>SIPP</strong><small>KARHUTLA</small></div></div>
+    <nav>
+      <button class="nav-item active" data-view="dashboard">Dashboard</button>
+      <button class="nav-item" data-view="map">Peta Risiko</button>
+      <button class="nav-item" data-view="prediction">Prediksi Kebakaran</button>
+      <button class="nav-item" data-view="patrol">Data Patroli</button>
+      <button class="nav-item" data-view="recommendation">Rekomendasi Patroli</button>
+      <button class="nav-item" data-view="report">Laporan</button>
+    </nav>
+  </aside>
+
+  <main class="main">
+    <header class="topbar"><div><p class="eyebrow">Monitoring Sistem</p><h1 id="page-title">Dashboard Overview</h1></div><div class="status"><span></span> Sistem Aktif</div></header>
+
+    <section id="dashboard-view" class="view active">
+      <div class="cards">
+        <article class="card"><small>Total Titik Panas</small><strong id="total-hotspots">0</strong><span class="trend">7 hari terakhir</span></article>
+        <article class="card"><small>Risiko Rendah</small><strong id="low-risk">0</strong><span class="badge low">Hijau</span></article>
+        <article class="card"><small>Risiko Sedang</small><strong id="medium-risk">0</strong><span class="badge medium">Kuning</span></article>
+        <article class="card"><small>Risiko Tinggi</small><strong id="high-risk">0</strong><span class="badge high">Merah</span></article>
+        <article class="card"><small>Patroli Dilakukan</small><strong id="total-patrols">0</strong><span class="trend">Total kegiatan</span></article>
+      </div>
+      <div class="grid-two"><article class="panel"><h2>Peta Sebaran Risiko</h2><div id="dashboard-map" class="map-small"></div></article><article class="panel"><h2>Distribusi Risiko</h2><div id="risk-chart" class="risk-chart"></div></article></div>
+    </section>
+
+    <section id="map-view" class="view"><article class="panel"><h2>Peta Risiko Kebakaran</h2><div id="risk-map" class="map-full"></div></article></section>
+
+    <section id="prediction-view" class="view">
+      <div class="grid-two"><article class="panel"><h2>Input Data Wilayah</h2><form id="prediction-form" class="form-grid">
+        <label>Nama Wilayah<input name="location_name" required value="Sebangau"></label>
+        <label>Hotspot Density 7D<input name="Hotspot_Density_7D" type="number" min="0" step="0.01" required value="0.7"></label>
+        <label>Hari Kering Berturut-turut<input name="Consecutive_Dry_Days" type="number" min="0" required value="12"></label>
+        <label>Frekuensi Kebakaran Historis<input name="Historical_Fire_Frequency" type="number" min="0" step="0.01" required value="0.6"></label>
+        <label>Kesenjangan Cakupan Patroli<input name="Patrol_Coverage_Gap" type="number" min="0" step="0.01" required value="0.5"></label>
+        <label>NDVI Dryness Index<input name="NDVI_Dryness_Index" type="number" min="0" max="1" step="0.01" required value="0.65"></label>
+        <label>Rasio Suhu/Lembap<input name="Mean_Temp_Humidity_Ratio" type="number" min="0" step="0.01" required value="0.58"></label>
+        <label>Kecepatan Angin 3D<input name="Wind_Speed_Mean_3D" type="number" min="0" step="0.01" required value="8.5"></label>
+        <button type="submit" class="primary">Analisis Risiko</button>
+      </form></article><article class="panel"><h2>Hasil Prediksi</h2><div id="prediction-result" class="prediction-empty">Masukkan data untuk melihat hasil prediksi.</div></article></div>
+    </section>
+
+    <section id="patrol-view" class="view"><article class="panel"><div class="panel-header"><h2>Data Patroli</h2><button id="show-patrol-form" class="primary">+ Tambah Data</button></div><form id="patrol-form" class="form-grid patrol-form hidden">
+      <label>Nama Petugas<input name="officer_name" required></label><label>Lokasi<input name="location" required></label><label>Tanggal<input name="patrol_date" type="date" required></label><label>Latitude<input name="latitude" type="number" step="any" required></label><label>Longitude<input name="longitude" type="number" step="any" required></label><label>Status<select name="status"><option>Selesai</option><option>Berlangsung</option><option>Terjadwal</option></select></label><button class="primary" type="submit">Simpan Patroli</button>
+    </form><div class="table-wrap"><table><thead><tr><th>Petugas</th><th>Lokasi</th><th>Tanggal</th><th>Koordinat</th><th>Status</th></tr></thead><tbody id="patrol-table"></tbody></table></div></article></section>
+
+    <section id="recommendation-view" class="view"><article class="panel"><h2>Rekomendasi Prioritas Patroli</h2><div id="recommendation-list" class="recommendation-list"></div></article></section>
+
+    <section id="report-view" class="view"><article class="panel"><div class="panel-header"><h2>Laporan Pemantauan</h2><button id="export-report" class="secondary">Ekspor CSV</button></div><p>Ringkasan data pemantauan, distribusi risiko, dan aktivitas patroli.</p><div id="report-summary" class="report-summary"></div></article></section>
+  </main>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="js/script.js"></script>
+</body>
+</html>
